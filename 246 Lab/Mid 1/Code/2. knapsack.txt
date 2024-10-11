@@ -1,0 +1,56 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+struct product{
+    double weight, price, unit_price;
+    int item_no;
+}lst[100], tmp;
+
+int main(){
+    int n, capacity;
+    double a, b;
+    cout << "Enter the number of product: ";
+    cin >> n;
+    cout << "Enter the capacity: ";
+    cin >> capacity;
+    double profit = 0.0;
+
+    for(int i = 0; i < n; i++){
+        lst[i].item_no = i + 1;
+        cout << "Enter the weight: ";
+        cin >> a;
+        cout << "Enter the product price: ";
+        cin >> b;
+        lst[i].weight = a;
+        lst[i].price = b;
+        lst[i].unit_price = b / a;
+    }
+    cout << endl;
+
+    for(int i = 0; i < n; i++){
+        for(int j = i + 1; j < n; j++){
+            if(lst[i].unit_price < lst[j].unit_price){
+                tmp = lst[i];
+                lst[i] = lst[j];
+                lst[j] = tmp;
+            }
+        }
+    }
+
+    for(int i = 0; i < n; i++){
+        if(capacity >= lst[i].weight){
+            capacity = capacity - lst[i].weight;
+            profit = profit + lst[i].price;
+            cout << lst[i].weight << " kg of " << lst[i].item_no << " " << lst[i].price << "$" << endl;
+        }
+        else{
+            profit += capacity * lst[i].unit_price;
+            cout << capacity << " kg of " << lst[i].item_no << " " << capacity * lst[i].unit_price << "$" << endl;
+            capacity = 0;
+            break;
+        }
+    }
+
+    cout << endl << "Total Profit: " << profit << endl;
+}

@@ -1,0 +1,71 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+int dp[100][200];
+int tr[100][200];
+
+int coin(int arr[], int n, int sum){
+    if(sum == 0)
+        return 0;
+
+    if(n <= 0)
+        return 99999;
+
+    if(dp[n][sum] != -1)
+        return dp[n][sum];
+
+    if(arr[n - 1] <= sum){
+        int l1 = 1 + coin(arr, n, sum - arr[n - 1]);
+        int l2 = coin(arr, n - 1, sum);
+        if(l1 < l2){
+            tr[n][sum] = 1;
+            return dp[n][sum] = l1;
+        }
+        else{
+            tr[n][sum] = 2;
+            return dp[n][sum] = l2;
+        }
+    }
+    else{
+        tr[n][sum] = 2;
+        return dp[n][sum] = coin(arr, n - 1, sum);
+    }
+}
+
+void traceback(int arr[], int n, int sum){
+    if(n <= 0 || sum <= 0)
+        return;
+
+    if(tr[n][sum] == 1){
+        cout << arr[n - 1] << " ";
+        traceback(arr, n, sum - arr[n - 1]);
+    }
+
+    else if(tr[n][sum] == 2)
+        return traceback(arr, n - 1, sum);
+}
+
+int main(){
+    int n;
+    cout << "Enter the size: ";
+    cin >> n;
+
+    int arr[100];
+    cout << "Enter the coins: ";
+    for(int i = 0; i < n; i++)
+        cin >> arr[i];
+
+    int sum;
+    cout << "Enter the total amount: ";
+    cin >> sum;
+
+    memset(dp, -1, sizeof(dp));
+
+    int mincoins = coin(arr, n, sum);
+    if(mincoins == 99999)
+        cout << "-1" << endl;
+    else
+        cout << "Minimum coins needed: " << mincoins << endl;
+
+    traceback(arr, n, sum);
+}

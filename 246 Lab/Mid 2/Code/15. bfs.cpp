@@ -1,0 +1,141 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+int color[100], parent[100], dis[100];
+vector<int>adj[100];
+queue<int>q;
+
+void bfs(){
+    while(!q.empty()){
+        int u = q.front();
+        q.pop();
+        cout << u << " ";
+
+        for(int i = 0; i < adj[u].size(); i++){
+            int v = adj[u][i];
+            if(color[v] == 0){
+                color[v] = 1;
+                dis[v] = dis[u] + 1;
+                parent[v] = u;
+                q.push(v);
+            }
+        }
+        color[u] = 2;
+    }
+    cout << endl;
+}
+
+void path(int source, int destination){
+    if(source == destination){
+        cout << source << " ";
+        return;
+    }
+    cout << destination << " ";
+    path(source, parent[destination]);
+}
+
+void connectivity(int n){
+    for(int i = 0; i < n; i++){
+        if(color[i] == 0){
+            cout << "Disconnected" << endl;
+            return;
+        }
+    }
+    cout << "Connected" << endl;
+}
+
+void node(int n){
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < adj[i].size(); j++)
+            cout << adj[i][j] << " ";
+        cout << endl;
+    }
+    cout << endl;
+}
+
+void degree(int n){
+    int deg[100];
+    for(int i = 0; i < n; i++)
+        deg[i] = 0;
+
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < adj[i].size(); j++)
+            deg[i]++;
+    }
+
+    cout << "Degree of all nodes: ";
+    for(int i = 0; i < n; i++)
+        cout << deg[i] << " ";
+    cout << endl << endl;
+
+    cout << "Highest degree vertex: ";
+    int index = 0;
+    for(int i = 0; i < n; i++){
+        for(int j = i + 1; j < n; j++){
+            if(deg[i] > deg[j])
+                index = i + 1;
+        }
+    }
+    cout << index << endl << endl;
+
+    cout << "Odd degree vertex: ";
+    for(int i = 0; i < n; i++){
+        if(deg[i] % 2 == 1)
+            cout << i + 1 << " ";
+    }
+    cout << endl << endl;
+
+    cout << "Degree sorting: ";
+    sort(deg, deg + n);
+    for(int i = 0; i < n; i++)
+        cout << deg[i] << " ";
+}
+
+int main(){
+    int n, edge, u, v;
+    cout << "Enter number of vertex: ";
+    cin >> n;
+    cout << "Enter number of edge: ";
+    cin >> edge;
+
+    for(int i = 0; i < edge; i++){
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    for(int i = 0; i < n; i++){
+        color[i] = 0;
+        parent[i] = -1;
+        dis[i] = 99999;
+    }
+
+    int source, destination;
+    cout << "Source: ";
+    cin >> source;
+
+    color[source] = 1;
+    dis[source] = 0;
+    q.push(source);
+    cout << endl << "BFS traversal: ";
+    bfs();
+
+
+    cout << endl << "Graph is ";
+    connectivity(n);
+
+    cout << endl << "Path from each node: " << endl;
+    for(int i = 0; i < n; i++){
+        if(color[i] != 0)
+            path(source, i);
+        else
+            cout << "No path";
+        cout << endl;
+    }
+
+    cout << endl << "Nodes to each vertex: " << endl;
+    node(n);
+
+    degree(n);
+}

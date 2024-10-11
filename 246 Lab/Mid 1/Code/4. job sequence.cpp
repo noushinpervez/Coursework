@@ -1,0 +1,55 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+struct job{
+    int deadline, profit;
+    char jobid;
+}lst[100], tmp;
+
+int main(){
+    int n, a, b;
+    char c;
+    cout << "Enter number of jobs: ";
+    cin >> n;
+
+    for(int i = 0; i < n; i++){
+        cout << "Enter job id: ";
+        cin >> c;
+        cout << "Enter deadline: ";
+        cin >> a;
+        cout << "Enter profit: ";
+        cin >> b;
+        lst[i].jobid = c;
+        lst[i].deadline = a;
+        lst[i].profit = b;
+    }
+
+    for(int i = 0; i < n; i++){
+        for(int j = i + 1; j < n; j++){
+            if(lst[i].profit < lst[j].profit){
+                tmp = lst[i];
+                lst[i] = lst[j];
+                lst[j] = tmp;
+            }
+        }
+    }
+
+    int take[100];
+    for(int i = 0; i < n; i++)
+        take[i] = 0;
+
+    for(int i = 0; i < n; i++){
+        for(int j = lst[i].deadline - 1; j >= 0; j--){
+            if(take[j] == 0){
+                take[j] = lst[i].jobid;
+                break;
+            }
+        }
+    }
+
+    for(int i = 0; i < n; i++){
+        if(take[i] != 0)
+            printf("%c ", take[i]);
+    }
+}

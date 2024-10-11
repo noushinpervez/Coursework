@@ -1,0 +1,44 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+void sorting(double a[], int n){
+    for(int i = 0; i < n; i++){
+        for(int j = i + 1; j < n; j++){
+            if(a[i] > a[j]){
+                double tmp = a[i];
+                a[i] = a[j];
+                a[j] = tmp;
+            }
+        }
+    }
+}
+
+int platforms(double arr[], double dep[], int n){
+    sorting(arr, n);
+    sorting(dep, n);
+
+    int platform = 0, flag = 0;
+    int i = 0, j = 0;
+
+    while(i < n && j < n){
+        if(arr[i] < dep[j]){
+            flag++;
+            if(platform < flag)
+                platform = flag;
+
+            i++;
+        }
+        else{
+            flag--;
+            j++;
+        }
+    }
+    return platform;
+}
+
+int main(){
+    double arr[] = {9.00, 9.40, 9.50, 11.00, 15.00, 18.00};
+    double dep[] = {9.10, 12.00, 11.20, 11.30, 19.00, 20.00};
+    cout << "Platform needed: " << platforms(arr, dep, 6);
+}
